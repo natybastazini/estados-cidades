@@ -5,6 +5,7 @@
  * Versao: 1.0
  **********************************************************************/
 
+const { json } = require('express')
 var estados_cidades = require('./estados_cidades.js')
 
 const getListaDeEstados = () =>{
@@ -30,6 +31,8 @@ const getDadosEstado = (sigla) =>{
     let estadosCidades = estados_cidades.estadosCidades.estados
     let JSONsigla = {}
 
+    let status = false
+
     estadosCidades.forEach( function(estados){
 
         if(estados.sigla.includes(sigla)){
@@ -38,11 +41,15 @@ const getDadosEstado = (sigla) =>{
             JSONsigla.descricao = estados.nome
             JSONsigla.capital = estados.capital
             JSONsigla.regiao = estados.regiao
+            status = true
         }
         
     })
 
-    return JSONsigla
+    if(status)
+        return JSONsigla
+    else
+        return false
 }
 
 // console.log(getDadosEstado('RJ'))
@@ -51,16 +58,23 @@ const getCapitalEstado = (sigla) =>{
 
     let estadosCidades = estados_cidades.estadosCidades.estados
     let JSONsigla = {}
+    
+    let status = false
 
     estadosCidades.forEach( function(estados){
 
         if(estados.sigla.includes(sigla)){
             JSONsigla.capital = estados.capital
+            status = true
         }
 
     })
 
-    return JSONsigla
+    if(status)
+        return JSONsigla
+    else
+        return false
+
 }
 
 // console.log(getCapitalEstado('SP'))
@@ -154,4 +168,4 @@ module.exports = {
     getEstadosRegiao,
     getCapitalPais,
     getCidades
-}
+}   

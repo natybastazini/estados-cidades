@@ -53,7 +53,7 @@ app.use((request, response, next) => {
     next()
 })
 
-// EndPoints: Listar a sigla de todos os Estados.
+// EndPoint: Listar a sigla de todos os Estados.
 
 app.get('/estados/sigla', cors(), async function (request, response, next){
 
@@ -64,11 +64,53 @@ app.get('/estados/sigla', cors(), async function (request, response, next){
     response.status(200)
 })
 
+// EndPoint: Retorna os dados do estado filtrando pela sigla.
+app.get('/estado/sigla/:uf', cors(), async function (request, response, next){
+
+    // Recebe uma variável encaminhada por parâmetro na URL da requisição.
+    let siglaEstado = request.params.uf
+
+    // Import do arquivo de funções
+    let controleDadosEstados = require('./modulo/manipulando_array_json.js')
+    let dadosEstado = controleDadosEstados.getDadosEstado(siglaEstado)
+
+    if(dadosEstado){
+        response.json(dadosEstado)
+        response.status(200)
+    }else{
+        response.status(404)
+        response.json({erro: "Não foi possível encontrar um item"})
+    }    
+
+
+})
+
+// Endpoint: Retorna os dados da Capital filtrando pela sigla.
+app.get('/capital/estado', cors(), async function(request, response, next){
+
+    // Recebe parametros via query, que são variáveis encaminhadas na URL da requisição (?uf=SP)
+    let siglaEstado = request.query.uf
+    // let cidade = request.query.cidade
+    // let pais = request.query.pais
+
+    let controledadosCapital = require('./modulo/manipulando_array_json.js')
+    let dadosCapital = controledadosCapital.getCapitalEstado(siglaEstado)
+
+    if(dadosCapital){
+        response.json(dadosCapital)
+        response.status(200)
+    }else{
+        response.status(404)
+        response.json({erro: "Não foi possível encontar um item"})
+    }
+
+    console.log(siglaEstado)
+    // console.log(cidade)
+    // console.log(pais)
+})
+
+
 // Executa a API e faz ela ficar aguardando requisições.
 app.listen(8080, function(){
     console.log('API funcionando e aguardando requesições')
 })
-
-
-
-
